@@ -24,7 +24,7 @@ HF_TOKEN=st.secrets["HUGGINGFACE_ACCESS_TOKEN"]
 
 
 st.write('# AI Interview Help')
-st.write('Please upload your resume')
+st.write('Please upload your resume in pdf format')
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
     st.success("Successfully uploaded the resume")
