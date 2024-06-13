@@ -72,6 +72,8 @@ if uploaded_file is not None:
         Resume Content:
         {context}
 
+        Here is the few list of questions that can be asked in the interview based on your resume..
+        
         Questions:
         Basic Questions:
         1.
