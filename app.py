@@ -27,18 +27,20 @@ st.write('Please upload your resume')
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
     st.success("Successfully uploaded the resume")
+    save_folder = 'resume'
+    save_path = Path(save_folder, uploaded_file.name)
+    
+    save_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # save_folder = 'resume'
-    # save_path = Path(save_folder, uploaded_file.name)
+    with open(save_path, mode='wb') as w:
+        w.write(uploaded_file.getvalue())
+        st.write(f"File saved at: {save_path}")
 
-    # save_path.parent.mkdir(parents=True, exist_ok=True)
+# directly read from the pdf
 
-    # with open(save_path, mode='wb') as w:
-    #     w.write(uploaded_file.getvalue())
-    #     st.write(f"File saved at: {save_path}")
+    loader=PyPDFLoader(save_path)
 
-    # Directly read from the pdf
-    loader = PyPDFLoader(uploaded_file)
+    
     pdf_docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     final_documents = text_splitter.split_documents(pdf_docs)
