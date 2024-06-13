@@ -35,7 +35,7 @@ if uploaded_file is not None:
 
     with open(save_path, mode='wb') as w:
         w.write(uploaded_file.getvalue())
-        st.write(f"File saved at: {save_path}")
+        # st.write(f"File saved at: {save_path}")
 
 # directly read from the pdf
 
@@ -114,6 +114,7 @@ if uploaded_file is not None:
 
     result = retrievalQA.invoke({"query": query})
     interview_questions = result['result']
+    st.write("Based on your resume, here are some potential interview questions that you might be asked:")
     st.write(interview_questions)
 
     # Initialize conversation memory
