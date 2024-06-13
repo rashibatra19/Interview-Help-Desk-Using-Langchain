@@ -1,9 +1,5 @@
-import os
-from pathlib import Path
 
 import streamlit as st
-from dotenv import load_dotenv
-
 from langchain.chains import ConversationChain, RetrievalQA
 from langchain.chains.conversation.memory import ConversationBufferWindowMemory
 from langchain.prompts import (
@@ -20,7 +16,6 @@ from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_huggingface import HuggingFaceEndpoint
 from streamlit_chat import message
 
-load_dotenv()  # take environment variables from .env.
 
 # HUGGINGFACEHUB_API_TOKEN = os.getenv('HUGGINGFACEHUB_API_TOKEN')
 HF_TOKEN=st.secrets["HUGGINGFACE_ACCESS_TOKEN"]
