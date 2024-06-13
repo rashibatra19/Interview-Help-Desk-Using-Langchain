@@ -17,11 +17,7 @@ from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_huggingface import HuggingFaceEndpoint
 from streamlit_chat import message
 
-
-# HUGGINGFACEHUB_API_TOKEN = os.getenv('HUGGINGFACEHUB_API_TOKEN')
-HF_TOKEN=st.secrets["HUGGINGFACE_ACCESS_TOKEN"]
-# os.environ["HUGGINGFACEHUB_API_TOKEN"]=HF_TOKEN
-
+HF_TOKEN = st.secrets["HUGGINGFACE_ACCESS_TOKEN"]
 
 st.write('# AI Interview Help')
 st.write('Please upload your resume in pdf format')
@@ -35,13 +31,9 @@ if uploaded_file is not None:
 
     with open(save_path, mode='wb') as w:
         w.write(uploaded_file.getvalue())
-        # st.write(f"File saved at: {save_path}")
 
-# directly read from the pdf
-
-    loader=PyPDFLoader(save_path)
-
-    
+    # Directly read from the PDF
+    loader = PyPDFLoader(save_path)
     pdf_docs = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     final_documents = text_splitter.split_documents(pdf_docs)
@@ -54,7 +46,6 @@ if uploaded_file is not None:
     )
 
     repo_id = "mistralai/Mistral-7B-Instruct-v0.2"
-
     hf = HuggingFaceEndpoint(
         repo_id=repo_id,
         max_length=128,
@@ -148,14 +139,7 @@ if uploaded_file is not None:
     textcontainer = st.container()
 
     with textcontainer:
-        if st.session_state.get("query_processed", False):
-        # Create a temporary input with empty value
-            query = st.text_input("Query: ", key="temp_input", value="")
-        # Update flag to indicate query processed
-            st.session_state["query_processed"] = False
-        else:
-            query = st.text_input("Query: ", key="input")
-        
+        query = st.text_input("Query: ", key="input")
 
     with response_container:
         if st.session_state['responses']:
@@ -164,7 +148,10 @@ if uploaded_file is not None:
                 if i < len(st.session_state['requests']):
                     message(st.session_state["requests"][i], is_user=True, key=str(i) + '_user')
 
-    if query:
+    if query and query != st.session_state.get("last_query", ""):
+        # Save the last query to avoid re-processing the same input
+        st.session_state["last_query"] = query
+
         # Retrieve relevant context from vector database
         search_results = retriever.get_relevant_documents(query)
 
@@ -176,10 +163,6 @@ if uploaded_file is not None:
         with st.spinner("typing..."):
             response = conversation.predict(input=f"Context:\n {combined_context} \n\n Query:\n{query}")
         
-        
-        
         st.session_state.requests.append(query)
         st.session_state.responses.append(response)
-        # Clear the input field after processing the query
-        st.session_state["query_processed"] = True
         st.rerun()
