@@ -138,11 +138,8 @@ if uploaded_file is not None:
     response_container = st.container()
     textcontainer = st.container()
 
-    if 'input_query' not in st.session_state:
-        st.session_state.input_query = ""
-
     with textcontainer:
-        query = st.text_input("Query: ", key="input_query")
+        query = st.text_input("Query: ", key="input")
 
     with response_container:
         if st.session_state['responses']:
@@ -168,7 +165,4 @@ if uploaded_file is not None:
         
         st.session_state.requests.append(query)
         st.session_state.responses.append(response)
-        
-        # Clear the input field after processing the query
-        st.session_state.input_query = ""
         st.rerun()
